@@ -5,6 +5,8 @@ class BlogsController < ApplicationController
 
   before_action :set_blog, only: %i[show edit update destroy]
 
+  before_action :authorize_user!, only: %i[edit update destroy]
+
   def index
     @blogs = Blog.search(params[:term]).published.default_order
   end
@@ -49,5 +51,11 @@ class BlogsController < ApplicationController
 
   def blog_params
     params.expect(blog: %i[title content secret random_eyecatch])
+  end
+
+  def authorize_user!
+    return if @blog.owned_by?(current_user)
+
+    raise ActiveRecord::RecordNotFound
   end
 end
