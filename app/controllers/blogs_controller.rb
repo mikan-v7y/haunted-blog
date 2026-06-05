@@ -7,6 +7,8 @@ class BlogsController < ApplicationController
 
   before_action :authorize_user!, only: %i[edit update destroy]
 
+  before_action :authorize_blog_view!, only: %i[show]
+
   def index
     @blogs = Blog.search(params[:term]).published.default_order
   end
@@ -74,5 +76,13 @@ class BlogsController < ApplicationController
     premium_user = current_user.premium?
 
     eyecatch_requested && !premium_user
+  end
+
+  def authorize_blog_view!
+    return unless @blog.secret?
+
+    return if @blog.owned_by?(current_user)
+
+    raise ActiveRecord::RecordNotFound
   end
 end
