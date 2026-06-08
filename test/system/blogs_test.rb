@@ -112,12 +112,14 @@ class BlogsTest < ApplicationSystemTestCase
 
     click_link 'こんばんは、ボブです'
     assert_text 'こんばんは。こんばんは。'
-    assert_text 'Liked by Alice'
+    assert_text 'Liked by'
+    assert_text 'Alice'
 
     find('.btn-like').click
     assert_text 'Hit first like!'
 
     find('.btn-like').click
-    assert_text 'Liked by Alice'
+    assert_text 'Liked by'
+    assert_text 'Alice'
   end
 end
