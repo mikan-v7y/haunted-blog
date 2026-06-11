@@ -22,11 +22,6 @@ class BlogsController < ApplicationController
   def edit; end
 
   def create
-    if invalid_random_eyecatch_request?
-      render status: :bad_request, plain: 'Bad Request'
-      return
-    end
-
     @blog = current_user.blogs.new(blog_params)
 
     if @blog.save
@@ -37,11 +32,6 @@ class BlogsController < ApplicationController
   end
 
   def update
-    if invalid_random_eyecatch_request?
-      render status: :bad_request, plain: 'Bad Request'
-      return
-    end
-
     if @blog.update(blog_params)
       redirect_to blog_url(@blog), notice: 'Blog was successfully updated.'
     else
@@ -72,13 +62,6 @@ class BlogsController < ApplicationController
     return if @blog.owned_by?(current_user)
 
     raise ActiveRecord::RecordNotFound
-  end
-
-  def invalid_random_eyecatch_request?
-    eyecatch_requested = params.dig(:blog, :random_eyecatch).present?
-    premium_user = current_user.premium?
-
-    eyecatch_requested && !premium_user
   end
 
   def authorize_blog_view!
