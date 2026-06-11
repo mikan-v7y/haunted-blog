@@ -7,13 +7,13 @@ class BlogsController < ApplicationController
 
   before_action :authorize_user!, only: %i[edit update destroy]
 
-  before_action :authorize_blog_view!, only: %i[show]
-
   def index
     @blogs = Blog.search(params[:term]).published.default_order
   end
 
-  def show; end
+  def show
+    authorize_blog_view!
+  end
 
   def new
     @blog = Blog.new
