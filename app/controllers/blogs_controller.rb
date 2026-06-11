@@ -59,16 +59,17 @@ class BlogsController < ApplicationController
   end
 
   def authorize_user!
-    return if @blog.owned_by?(current_user)
-
-    raise ActiveRecord::RecordNotFound
+    @blog = current_user.blogs.find(params[:id])
   end
 
   def authorize_blog_view!
-    return unless @blog.secret?
-
-    return if @blog.owned_by?(current_user)
-
-    raise ActiveRecord::RecordNotFound
+    @blog =
+      if current_user
+        Blog.published
+            .or(current_user.blogs)
+            .find(params[:id])
+      else
+        Blog.published.find(params[:id])
+      end
   end
 end
