@@ -12,7 +12,7 @@ class Blog < ApplicationRecord
   scope :search, lambda { |term|
     return all if term.blank?
 
-    escaped_term = ActiveRecord::Base.sanitize_sql_like(term)
+    escaped_term = sanitize_sql_like(term)
 
     where(
       'title LIKE ? OR content LIKE ?',
