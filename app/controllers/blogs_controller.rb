@@ -10,14 +10,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @blog =
-      if current_user
-        Blog.published
-            .or(current_user.blogs)
-            .find(params[:id])
-      else
-        Blog.published.find(params[:id])
-      end
+    @blog = Blog.published.or(current_user&.blogs || Blog.none).find(params[:id])
   end
 
   def new
