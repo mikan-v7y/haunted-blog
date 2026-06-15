@@ -10,7 +10,14 @@ class BlogsController < ApplicationController
   end
 
   def show
-    authorize_blog_view!
+    @blog =
+      if current_user
+        Blog.published
+            .or(current_user.blogs)
+            .find(params[:id])
+      else
+        Blog.published.find(params[:id])
+      end
   end
 
   def new
@@ -54,16 +61,5 @@ class BlogsController < ApplicationController
 
   def set_owned_blog
     @blog = current_user.blogs.find(params[:id])
-  end
-
-  def authorize_blog_view!
-    @blog =
-      if current_user
-        Blog.published
-            .or(current_user.blogs)
-            .find(params[:id])
-      else
-        Blog.published.find(params[:id])
-      end
   end
 end
