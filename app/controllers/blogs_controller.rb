@@ -45,14 +45,14 @@ class BlogsController < ApplicationController
 
   private
 
+  def set_owned_blog
+    @blog = current_user.blogs.find(params[:id])
+  end
+
   def blog_params
     permitted = %i[title content secret]
     permitted << :random_eyecatch if current_user.premium?
 
     params.expect(blog: permitted)
-  end
-
-  def set_owned_blog
-    @blog = current_user.blogs.find(params[:id])
   end
 end
